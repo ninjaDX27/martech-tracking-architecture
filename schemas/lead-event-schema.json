@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ninjaDX27/martech-tracking-architecture/lead-event-schema.json",
+  "title": "Consent-aware generate_lead event v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "event": {
+      "const": "generate_lead"
+    },
+    "event_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "event_time": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "form_id": {
+      "const": "mortgage_demo"
+    },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "analytics_storage": {
+          "enum": [
+            "granted",
+            "denied"
+          ]
+        },
+        "ad_storage": {
+          "enum": [
+            "granted",
+            "denied"
+          ]
+        },
+        "ad_user_data": {
+          "enum": [
+            "granted",
+            "denied"
+          ]
+        },
+        "ad_personalization": {
+          "enum": [
+            "granted",
+            "denied"
+          ]
+        }
+      },
+      "required": [
+        "analytics_storage",
+        "ad_storage",
+        "ad_user_data",
+        "ad_personalization"
+      ]
+    },
+    "user_data": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "hashed_email": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "hashed_phone": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": []
+    },
+    "attribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gclid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "pattern": "^[A-Za-z0-9_-]+$"
+        },
+        "fbc": {
+          "type": "string",
+          "maxLength": 250,
+          "pattern": "^fb\\.1\\.[0-9]{13}\\.[A-Za-z0-9_-]+$"
+        },
+        "fbp": {
+          "type": "string",
+          "maxLength": 100,
+          "pattern": "^fb\\.1\\.[0-9]{13}\\.[0-9]+$"
+        }
+      },
+      "required": []
+    }
+  },
+  "required": [
+    "schema_version",
+    "event",
+    "event_id",
+    "event_time",
+    "form_id",
+    "consent",
+    "user_data",
+    "attribution"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "consent": {
+            "properties": {
+              "ad_user_data": {
+                "const": "denied"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "user_data": {
+            "maxProperties": 0
+          }
+        }
+      }
+    }
+  ]
+}

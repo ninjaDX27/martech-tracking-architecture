@@ -1,0 +1,13 @@
+{
+  "name": "martech-tracking-architecture",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test",
+    "simulate": "node src/simulate.mjs"
+  }
+}
